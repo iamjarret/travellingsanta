@@ -16,8 +16,6 @@ def minEdgeAlg(allCities):
 		if newEdge not in allEdges:
 			allEdges.append(newEdge)
 	return allEdges
-
-def edgeComplete(allEdges, allCities):
 	
 
 def assignEdge(allEdges):

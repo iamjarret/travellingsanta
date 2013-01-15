@@ -3,48 +3,57 @@
 import math
 
 class City:
-	def __init__(self, x,y):
+	def __init__(self, idNum, x,y):
 		"Creates City object for storing City data"
 		self.x = int(x)
 		self.y = int(y)
+		self.id = int(idNum)
 		self.pathnum = 0
-		self.visited1 = False
-		self.visited2 = False
 		self.visited = False
 		self.dead = False
 		self.dead1 = False
 		self.dead2 = False
 	
-	def visit(self,path):
-		"self.visit() makes the City have status visitied"
-		if path==1:
-			if self.visited1:
-				self.dead1=True
-			else:
-				self.visited1 = True
-		elif path==2:
-			if self.visited2:
-				self.dead2 = True
-			else:
-				self.visited2 = True
-		else:
-			if self.visited:
-				self.dead = True
-			else:
-				self.visited = True
-				
-	def reset(self):
-		"resets the City status to unvisited"
-		self.visited = False
+	def __eq__(self,other):
+		return self.__key() == other.__key()
+	
+	def __ne__(self,other):
+		return self.key() != other.__key()
 		
+	def __key(self):
+		return (self.x, self.y)
+		
+	def __hash__(self):
+		return hash(self.__key())
+
+	def getId(self):
+		return self.id
+	
 	def getX(self):
 		"Prints x coordinate of City"
 		return self.x
 		
 	def getY(self):
 		"Prints y coordinated of City"
-		return self.y
+		return self.y		
+
+	def dist(self, City2):
+		"returns absolute euclidian distance"
+		return math.sqrt((self.x-City2.getX())**2 + (self.y-City2.getY())**2)
+		
+	def visit(self):
+		"self.visit() makes the City have status visitied"
+		self.visited = True
 	
+	def status(self):
+		"returns City visit/unvisited status"
+		return self.visited
+
+'''					
+	def reset(self):
+		"resets the City status to unvisited"
+		self.visited = False
+
 	def getX1(self):
 		"Prints x1 coordinate of City"
 		return self.x1
@@ -76,18 +85,7 @@ class City:
 	def getPath(self):
 		"Prints pathnum"
 		return self.pathnum
-		
-	def status(self, path):
-		"returns City visit/unvisited status for each path"
-		if path ==1:
-			return self.visited1
-		else:
-			return self.visited2
-			
-	def dist(self, City2):
-		"returns absolute euclidian distance"
-		return math.sqrt((self.x-City2.getX())**2 + (self.y-City2.getY())**2)
-
+					
 	def dist1(self, City2):
 		"returns distance for path 1 Euclidian"
 		return math.sqrt((self.x1-City2.getX1())**2 + (self.y1-City2.getY1())**2)
@@ -100,13 +98,10 @@ class City:
 		"gets closest city to self from a list of cities"
 		self.closest = sorted(allCities, key = lambda city: self.dist(city))[1]
 		self.closestDist = self.dist(self.closest)
-		
-	def reassignClosestCity(self, allCities, allEdges):
-		
 	
 	def getClosestDist(self):
 		return self.closestDist
 		
 	def getClosestCity(self):
 		return self.closest
-		
+'''

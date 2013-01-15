@@ -1,20 +1,21 @@
 from csv import reader
 import math
-from city import *
-from edge import *
-from main_func import importData
-from main_alg import minEdgeAlg, assignEdge
-from main_visualize import visualize #code not yet working
-
+from city import City
+from edge import Edge
+from main_func import importData, exportPaths, noSharedEdge
+from main_hill import *
+from main_dist import Dist, evaluate
+from main_insertion import furthestInsertion
 
 def main():
-	#allCities = importData("santa_cities.csv")
-	allCities = importData("santa_cities_test.csv")
-	allEdges = minEdgeAlg(allCities)
-	for x in allEdges[0:100]:
-		print x.dist()
-	assignEdge(allEdges)
-	path1, path2 = getPaths(allEdges)
-	visualize(allEdges, allCities, 1)
+	allCities = importData("santa_cities.csv")
+	#allCities = importData("santa_cities_test.csv")
+	dist = Dist(allCities)
+	print "done with dist matrix"
+	bestPath = furthestInsertion(allCities, dist)
+	print evaluate(bestPath, dist)
+	exportPaths(bestPath, "run1.csv")
+	print noSharedEdge(bestPath)
+	#visualize(bestPath, allCities)
 	
 main()

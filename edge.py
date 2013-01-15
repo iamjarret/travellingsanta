@@ -12,26 +12,18 @@ class Edge:
 			self.c1 = city2
 			self.c2 = city1
 		self.path = 0
+	
+	def __key(self):
+		return (self.c1, self.c2)
 		
-	def __eq__(self, edge2):
-		"defines == operator for Edge class"
-		if self.c1 == edge2.getC1() and self.c2 == edge2.getC2():
-			return True
-		else:
-			return False
+	def __eq__(self,other):
+		return self.__key() == other.__key()
+	
+	def __ne__(self,other):
+		return self.key() != other.__key()
 		
-	def __ne__(self,edge2):
-		"defines != operate for Edge class"
-		if self.c1 != edge2.getC1() or self.c2 != edge2.getC2():
-			return True
-		else:
-			return False
-			
-	def setPath(self,num):
-		self.path = num
-		
-	def getPath(self):
-		return self.path
+	def __hash__(self):
+		return hash(self.__key())
 	
 	def dist(self):
 		city1 = self.c1

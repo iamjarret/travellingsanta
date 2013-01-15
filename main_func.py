@@ -1,6 +1,6 @@
 #santa.py
 
-from csv import reader
+from csv import reader, writer
 import math
 from random import random
 from city import *
@@ -10,13 +10,20 @@ def importData(fileName):
 	"Import lits of cities and creates City objects as list"
 	csvfile = open(fileName)
 	dataout = []
-	data = reader(csvfile, delimiter = ';')
+	data = reader(csvfile, delimiter = ',')
 	count = 0
 	for row in data:
 		if row[0]!="id":
-			dataout.append(City(row[1],row[2]))
+			dataout.append(City(row[0],row[1],row[2]))
 			count +=1
 	return dataout
+	
+def exportPaths(paths, fileName):
+	with open(fileName,'wb') as csvfile:
+		writeFile = writer(csvfile)
+		writeFile.writerow(["path1","path2","x1","y1","x2","y2"])
+		for x in range(len(paths[0])):
+			writeFile.writerow([paths[0][x].getId(),paths[1][x].getId(),paths[0][x].getX(),paths[0][x].getY(),paths[1][x].getX(),paths[1][x].getY()])
 	
 def importSolution(fileName):
 	"Imports paths outputted as a solution"
@@ -51,14 +58,6 @@ def allVisited(Cities):	#works
 		if x.status()==False:
 			return False
 	return True
-	
-def pathLength(Cities):
-	"Sorts cities based on pathNum then calculates distance: VERIFIED"
-	dist = 0
-	sortedCities = sortCities(Cities)
-	for i in range(len(sortedCities)-1):
-		dist += distance(sortedCities[i],sortedCities[i+1])
-	return dist
 
 def sortCities(Cities):
 	return sorted(Cities, key = lambda Cities: Cities.pathnum)
@@ -88,14 +87,18 @@ def testpathLength(path1, path2, AllCities):
 	print "score is", max(d1,d2)
 	return max(d1,d2)
 	
-def randomPath(dataAll):
-	"Randomly selects Cities from dataAll.  Outputs City number."
-	tosort=[]
-	for i in range(len(dataAll)):
-		tosort.append([random(),i])
-	sort = sorted(tosort)
-	outlist = []
-	for x in sort:
-		outlist.append(x[1])
-	return outlist
-	
+def noSharedEdge(paths):
+	'''takes a list of both paths and returns True if 
+	there is no shared edge (i.e. the intersection of the sets
+	is empty'''
+	edge1, edge2 = pathToEdge(paths[0]), pathToEdge(paths[1])
+	if set(edge1).intersection(set(edge2)) == set():
+		return True
+	else:
+		return False
+		
+def pathToEdge(path):
+	edges = []
+	for i in range(len(path)-1):
+		edges.append(Edge(path[i], path[i+1]))
+	return edges
